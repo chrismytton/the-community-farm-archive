@@ -65,7 +65,7 @@ class CommunityFarmArchive
     end
   end
 
-  def commit_html(repo: 'chrismytton/the-community-farm-html', filename: 'index.html')
+  def commit_html(repo: 'communityfarm/api', filename: 'index.html')
     index_html = Octokit.contents(repo, path: filename)
     if Base64.decode64(index_html[:content]) == page.html
       warn "No changes to #{filename} detected"
