@@ -65,9 +65,9 @@ class CommunityFarmArchive
     end
   end
 
-  def commit_html(repo: 'communityfarm/api', filename: 'archive/box_display.html')
+  def commit_html(repo: ENV.fetch('MORPH_GITHUB_BUILD_REPO'), filename: 'config/HTML_ID')
     index_html = Octokit.contents(repo, path: filename)
-    if Base64.decode64(index_html[:content]) == page.html
+    if Base64.decode64(index_html[:content]) == page.id
       warn "No changes to #{filename} detected"
     else
       Octokit.update_contents(
@@ -75,7 +75,7 @@ class CommunityFarmArchive
         filename,
         "Update #{filename}",
         index_html[:sha],
-        page.html,
+        page.id,
         branch: 'master'
       )
     end
@@ -85,7 +85,7 @@ class CommunityFarmArchive
       repo,
       filename,
       "Create #{filename}",
-      page.html,
+      page.id,
       branch: 'master'
     )
   end
