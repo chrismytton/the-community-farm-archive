@@ -54,6 +54,7 @@ class CommunityFarmArchive
   attr_reader :url
 
   def save_response
+    return if page_already_saved?
     ScraperWiki.save_sqlite([:id], page.to_h)
 
     page.meta.each do |header, value|
@@ -92,6 +93,14 @@ class CommunityFarmArchive
 
   def page
     @page ||= CommunityFarmPage.new(res: open(url))
+  end
+
+  private
+
+  def page_already_saved?
+    ScraperWiki.sqliteexecute('select * from data where id = ?', [page.id]).any?
+  rescue SqliteMagic::NoSuchTable
+    false
   end
 end
 
